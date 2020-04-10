@@ -1,4 +1,4 @@
-# Mock DP3T: Decentralized Privacy Preserving Proximity Tracing
+# Decentralized Privacy Preserving Proximity Tracing
 
 * Source code license: Apache 2.0
 
@@ -43,6 +43,14 @@ around long enough (there was sufficient contact) are added to the daily
 observed contacts. The `check_infected` method takes an `SK` and date and
 checks all local contacts if one of the `EphIDs` of that `SK` were observed
 and then issues a warning.
+
+
+## Installation
+
+You can run the DP3T reference implementation with your favorite `python3`
+interpreter. The only additional package you need is `Cryptodome`. You can
+install it, e.g., through `sudo apt install python3-pycryptodome` or
+`pip install pycryptodome`.
 
 
 ## Example run
