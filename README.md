@@ -50,7 +50,10 @@ and then issues a warning.
 You can run the DP3T reference implementation with your favorite `python3`
 interpreter. The only additional package you need is `Cryptodome`. You can
 install it, e.g., through `sudo apt install python3-pycryptodome` or
-`pip3 install pycryptodome` (or `pip` if you only have python3 installed).
+`pip3 install pycryptodomex` (or `pip` if you only have python3 installed).
+Note that for `pip`, there is a difference between `pycryptodome` and
+`pycryptodomex` as they install different subsets of the library API
+functionality.
 
 
 ## Example run
