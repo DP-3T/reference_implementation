@@ -54,7 +54,7 @@ if __name__ == "__main__":
 				bob.ctmgr.receive_scans([alice_ephID], now = now)
 				now = now + timedelta(seconds=LowCostDP3T.CONTACT_THRESHOLD+1)
 				alice.ctmgr.receive_scans([bob_ephID], now = now)
-				bob.ctmgr.receive_scans([bob_ephID], now = now)
+				bob.ctmgr.receive_scans([alice_ephID], now = now)
 				# Process the received beacons
 				alice.next_epoch()
 				bob.next_epoch()
@@ -70,13 +70,12 @@ if __name__ == "__main__":
 			now = datetime.utcfromtimestamp(epotime)
 			bob_ephID = bob.keystore.get_current_ephID(now)
 			isidor_ephID = isidor.keystore.get_current_ephID(now)
-			beacons = [alice_ephID, bob_ephID, isidor_ephID]
 			# Record two beacons in the same epoch, resulting in a contact
-			bob.ctmgr.receive_scans(beacons, now = now)
-			isidor.ctmgr.receive_scans(beacons, now = now)
+			bob.ctmgr.receive_scans([isidor_ephID], now = now)
+			isidor.ctmgr.receive_scans([bob_ephID], now = now)
 			now = now + timedelta(seconds=LowCostDP3T.CONTACT_THRESHOLD+1)
-			bob.ctmgr.receive_scans(beacons, now = now)
-			isidor.ctmgr.receive_scans(beacons, now = now)
+			bob.ctmgr.receive_scans([isidor_ephID], now = now)
+			isidor.ctmgr.receive_scans([bob_ephID], now = now)
 			# Process the received beacons
 			alice.next_epoch()
 			bob.next_epoch()
