@@ -27,13 +27,13 @@ from datetime import datetime, timezone, timedelta
 
 # Fixed global default broadcast key for ephID generation.
 BROADCAST_KEY = "Broadcast key"
-	
+
 # Length of an epoch (in minutes).
 EPOCH_LENGTH = 15
 
 # Number of epochs per day.
 NUM_EPOCHS_PER_DAY = 24*60//EPOCH_LENGTH
-	
+
 # Duration key and contact history is kept (in days).
 RETENTION_PERIOD = 14
 
@@ -136,7 +136,7 @@ class KeyStore:
 	def get_current_ephID(self, now = None):
 		''' Returns the current ephID
 		'''
-		if now == None:
+		if now is None:
 			now = datetime.now(timezone.utc)
 		return self.ephIDs[self.get_epoch(now)]
 
@@ -153,7 +153,7 @@ class ContactManager:
 
 	# Remote beacon management
 	##########################
-	def receive_scans(self, beacons = [], now = None):
+	def receive_scans(self, beacons = None, now = None):
 		''' Receive a set of new BLE beacons and process them.
 
 			Add the current received information to the observations for the
@@ -163,7 +163,10 @@ class ContactManager:
 				beacons([]): list of received beacons.
 				now(datetime): current time, override for mock testing.
 		'''
-		if now == None:
+		if beacons is None:
+			beacons = []
+
+		if now is None:
 			now = datetime.now(timezone.utc)
 
 		timestamp = (now.hour*60 + now.minute)*60 + now.second
@@ -234,7 +237,7 @@ class ContactManager:
 				date(str): date of SK_t (i.e., the t in the form 2020-04-23).
 				now(datetime): current date for mock testing.
 		'''
-		if now == None:
+		if now is None:
 			now = datetime.now(timezone.utc)
 		infect_date = datetime.strptime(date, "%Y-%m-%d")
 		days_infected = (now-infect_date).days
