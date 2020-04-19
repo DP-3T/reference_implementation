@@ -26,7 +26,7 @@ import random
 from datetime import datetime, timezone, timedelta
 
 # Fixed global default broadcast key for ephID generation.
-BROADCAST_KEY = "Broadcast key"
+BROADCAST_KEY = "broadcast key"
 
 # Length of an epoch (in minutes).
 EPOCH_LENGTH = 15
