@@ -71,17 +71,17 @@ Bluetooth devices or backend services.
 
 You'll need to install the project. For example as follows:
 
-```
+```bash
 python3 -m venv venv
 source venv/bin/activate
-pip3 install -e "."
+pip3 install -e .
 ```
 
 ## Running the example
 
 After installing the project you can run the examples:
 
-```
+```bash
 examples/run_lowcost.py
 examples/run_unlinkable.py
 ```
@@ -90,7 +90,7 @@ examples/run_unlinkable.py
 
 After installing the project you can obtain test vectors by running:
 
-```
+```bash
 utils/testvectors_lowcost.py
 utils/testvectors_unlinkable.py
 ```
@@ -105,7 +105,7 @@ venv/bin/ativate`) to ensure that the paths are picked up correctly.
 
 Please install the proper pre-commit-hooks so that the files stay formatted:
 
-```
+```bash
 pip install pre-commit
 pre-commit install
 ```
