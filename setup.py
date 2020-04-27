@@ -18,7 +18,7 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License"
         "Operating System :: OS Independent",
     ],
-    install_requires=["pycryptodomex", "scalable-cuckoo-filter"],
-    test_requires=["pytest"],
     python_requires=">=3.6",
+    install_requires=["pycryptodomex", "scalable-cuckoo-filter"],
+    extras_require={"dev": ["black", "flake8", "pre-commit"], "test": ["pytest"]},
 )
