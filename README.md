@@ -1,67 +1,116 @@
-# Decentralized Privacy Preserving Proximity Tracing
-
-* Source code license: Apache 2.0
+# Cryptographic Reference Implementation of DP3T designs
 
 The full set of documents for DP3T is at <https://github.com/DP-3T/documents>.
 Please refer to the technical documents and whitepapers for the descriptions
 of the implementation.
 
-At its core, DP3T describes a decentralized framework for proximity tracing
-where the smart phones store all observed contacts in a local database.
-During periodic intervals, the apps poll a database of infected SKt vectors
-and check if they have been exposed to any of the beacons sent by an infected
-app.
+*This repository implements both proximity tracing designs from the
+white-paper.* In both designs, smartphones broadcast ephemeral Bluetooth
+identifiers (`EphID`s), and store the identifiers received from other devices.
+The designs differ in how they generate these `EphID`s and how they do proximity
+tracing:
 
-One of the core challenges in designing and implementing such a framework is
-the large amount of unknowns. This mock implementation of the framework helps
-us identify and measure some of these unknowns so that we can carry out better
-decisions and fine tune our technical design. This mock implementation is not
-meant to be a real implementation.
+ * *Low-cost design*. In this design, `EphID`s are generated from a rotating
+   seed `SKt` for efficiency. When an app owner is diagnosed with SARS-CoV-2,
+   their app uploads the corresponding seed `SKt`. Other apps use this seed to
+   regenerate the ephemeral Bluetooth identifiers, and check if they have seen
+   an identifier corresponding to an infected person.
+ * *Unlinkable design*. In this design, `EphID`s are generated independently
+   from random seeds. When an app owner is diagnosed with SARS-CoV-2, their app
+   uploads the corresponding seeds for each `EphID` broadcast in a compact
+   representation. Other apps use this compact representation to check if they
+   have seen an identifier corresponding to an infected person.
+ 
+*Difference with respect to the Andoid/iOS SDKs and backend implementations.*
+The DP-3T project has also published
+[Android](https://github.com/DP-3T/dp3t-sdk-android) and
+[iOS](https://github.com/DP-3T/dp3t-sdk-ios) implementations and a [backend
+SDK](https://github.com/DP-3T/dp3t-sdk-backend) for use in production apps and
+backends. This reference implementation serves to provide a simple
+implementation that complements the white paper. We try to avoid differences
+between this Python reference implementations and the other implementations, but
+small differences are unavoidable due to the speed at which this project
+progresses.
 
-The mock implementation focuses on the app side. The backend is extremely
-simple and may consist of just a set of flat files of `<SK, day>` tuples. The
-app periodically polls and downloads lists of newly infected, checking locally
-if they have been exposed.
+*Example implementations of App and Backend.* We plan to soon extend this
+repository with example implementations of the App and Backend server. The App
+implementation will show how smartphones interact with the backend server's API
+to upload tracing information, to retrieve tracing information, and to do
+contact tracing.
 
+## The code
 
-## Cryptographic primitives: `KeyStore`
+This reference implementation is deliberately simple. It aims to provide a clear
+and simple implementation of the cryptographic concepts from the whitepaper and
+to show how these tie together.
 
-The cryptographic primitives are implemented in the class `DP3T.KeyStore`.
-The main methods are `rotate_SK` which rotates the private SK to the next day
-and `rotate_ephIDs` which creates the set of `ephIDs` for the new day. These
-methods are straight forward implementations of the description in the
-whitepaper.
+The package `dp3t.config` contains global configuration parameters shared
+between all designs. The package `dp3t.protocols` contains the reference
+implementations `lowcost` and `unlinkable` for the low-cost and unlinkable
+designs. These files follow a similar structure:
 
+ 1. They introduce design-specific parameters such as the length of a batch.
+ 2. They define utility functions to convert time to internal representations
+ 2. They define simple cryptographic functions used to generate seeds and `EphIDs`
+ 3. The class `TracingDataBatch` represents the information downloaded from the
+    server. Both designs use the same interface for this class.
+ 3. The class `ContactTracer` ties these functions together and sketches the
+    core contact tracing functionality that would be used by a smartphone
+    contact tracing app. The class takes care of rotating keys (`next_day`),
+    generating `EphID`s to broadcast, to output `EphID` given a specific time
+    (`get_ephid_for_time`), to process an observation (`add_obseration`), to
+    output tracing information (`get_tracing_information`), and to process a
+    batch of tracing information to determine the number of contacts with
+    infected people (`matches_with_batch`). Both designs use the same interface
+    for this class
+    
+This code deliberately does _not_ implement any interactions with (simulated)
+Bluetooth devices or backend services.
+    
+## Installing the reference implementation
 
-## Contact tracing: `ContactManager`
+You'll need to install the project. For example as follows:
 
-The contact tracing and management is implemented in the class
-`DP3T.ContactManager`. Newly received beacons come in through `receive_scans`
-where they are added to local observations. Each epoch, these local
-observations are evaluated in `process_epoch` and contacts that have been
-around long enough (there was sufficient contact) are added to the daily
-observed contacts. The `check_infected` method takes an `SK` and date and
-checks all local contacts if one of the `EphIDs` of that `SK` were observed
-and then issues a warning.
+```
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -e "."
+```
 
+## Running the example
 
-## Installation
+After installing the project you can run the examples:
 
-You can run the DP3T reference implementation with your favorite `python3`
-interpreter. The only additional package you need is `Cryptodome`. You can
-install it, e.g., through `sudo apt install python3-pycryptodome` or
-`pip3 install pycryptodomex` (or `pip` if you only have python3 installed).
-Note that for `pip`, there is a difference between `pycryptodome` and
-`pycryptodomex` as they install different subsets of the library API
-functionality.
+```
+examples/run_lowcost.py
+examples/run_unlinkable.py
+```
 
+## Obtaining test vectors
 
-## Example run
+After installing the project you can obtain test vectors by running:
 
-The file `example_run.py` show cases the different aspects of proximity
-tracing. The three persons Alice, Bob, and Isidor interact in different
-settings and record the corresponding ephemeral IDs. At one point, Isidor
-is tested positive and agrees to submit his `SK_t`. Next, Alice and Bob test
-for this `SK_t` and Bob detects that he was at risk 1 day ago.
+```
+utils/testvectors_lowcost.py
+utils/testvectors_unlinkable.py
+```
 
-You can run the example with `python3 example_run.py`.
+## Running the tests
+
+To run the tests, install `pytest` (e.g., `pip install pytest`) and then run
+`pytest`. You may need to reload the `venv` (`deactivate` followed by `source
+venv/bin/ativate`) to ensure that the paths are picked up correctly.
+
+## Development
+
+Please install the proper pre-commit-hooks so that the files stay formatted:
+
+```
+pip install pre-commit
+pre-commit install
+```
+
+## License
+
+This code is licensed under the Apache 2.0 license, as found in the LICENSE
+file.

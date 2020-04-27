@@ -1,1 +1,10 @@
-__pycache__/*
+# Python
+__pycache__/
+
+# Python distribution/packaging
+/build/
+/dist/
+*.egg-info/
+
+# Development
+venv/
