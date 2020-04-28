@@ -125,6 +125,7 @@ def main():
         print("  * CORRECT: Alice's phone concludes she is at risk")
     else:
         print("  * ERROR: Alice's phone does not conclude she is at risk")
+        raise RuntimeError("Example code failed!")
 
     print("\n[Alice] Runs housekeeping to update her observation store")
     alice.housekeeping_after_batch(batch)

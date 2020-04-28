@@ -77,6 +77,18 @@ def batch_start_from_time(time):
     return (int(time.timestamp()) // SECONDS_PER_BATCH) * SECONDS_PER_BATCH
 
 
+def secure_shuffle(items):
+    """Perform a cryptographically secure shuffling of the given items
+
+    Args:
+        items (obj:list): A list of items to be shuffled
+
+    Returns:
+        Nothing. Items are shuffled in place
+    """
+    random.shuffle(items, secrets.SystemRandom().random)
+
+
 #########################################
 ### BASIC CRYPTOGRAPHIC FUNCTIONALITY ###
 #########################################
@@ -130,8 +142,7 @@ def generate_ephids_for_day(current_day_key, shuffle=True):
 
     # Shuffle the resulting ephids
     if shuffle:
-        # WARNING: replace with a secure shuffle
-        random.shuffle(ephids)
+        secure_shuffle(ephids)
 
     return ephids
 
@@ -310,7 +321,7 @@ class ContactTracer:
         self.observations[batch_start].append(ephid)
 
         # Shuffle observations to hide receive order
-        random.shuffle(self.observations[batch_start])
+        secure_shuffle(self.observations[batch_start])
 
     def get_tracing_information(
         self,
@@ -451,4 +462,4 @@ class ContactTracer:
             self.observations[day_time].extend(observations)
 
             # Reshuffle to make sure we do not store ordering data
-            random.shuffle(self.observations[day_time])
+            secure_shuffle(self.observations[day_time])

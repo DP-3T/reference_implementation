@@ -127,6 +127,7 @@ def main():
         print("  * CORRECT: Alice's phone concludes she is at risk")
     else:
         print("  * ERROR: Alice's phone does not conclude she is at risk")
+        raise RuntimeError("Example code failed!")
 
 
 if __name__ == "__main__":

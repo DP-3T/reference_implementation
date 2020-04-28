@@ -19,7 +19,7 @@ __copyright__ = """
 """
 __license__ = "Apache 2.0"
 
-from binascii import hexlify, unhexlify
+from binascii import unhexlify
 from datetime import datetime, timezone
 
 from dp3t.protocols.unlinkable import (
