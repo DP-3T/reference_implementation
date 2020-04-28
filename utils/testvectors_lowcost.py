@@ -19,8 +19,6 @@ __copyright__ = """
 """
 __license__ = "Apache 2.0"
 
-from datetime import datetime, timezone
-
 from dp3t.protocols.lowcost import next_day_key, generate_ephids_for_day
 
 KEY0 = bytes.fromhex("0000000000000000000000000000000000000000000000000000000000000000")
