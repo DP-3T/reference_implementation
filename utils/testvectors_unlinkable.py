@@ -19,7 +19,6 @@ __copyright__ = """
 """
 __license__ = "Apache 2.0"
 
-from binascii import unhexlify
 from datetime import datetime, timezone
 
 from dp3t.protocols.unlinkable import (
@@ -29,8 +28,8 @@ from dp3t.protocols.unlinkable import (
 )
 
 
-SEED0 = b"0000000000000000000000000000000000000000000000000000000000000000"
-SEED1 = b"eaa2054637009757b9988b28998209d253eede69345f835bb91b3b333108d229"
+SEED0 = "0000000000000000000000000000000000000000000000000000000000000000"
+SEED1 = "eaa2054637009757b9988b28998209d253eede69345f835bb91b3b333108d229"
 
 
 TIME0 = datetime(2020, 4, 10, hour=7, minute=15, tzinfo=timezone.utc)
@@ -41,7 +40,7 @@ TIME2 = datetime(2020, 4, 16, hour=14, minute=32, tzinfo=timezone.utc)
 def main():
     print("## Test vectors computing EphID given a seed ##")
     for seed_str in [SEED0, SEED1]:
-        seed = unhexlify(seed_str)
+        seed = bytes.fromhex(seed_str)
         ephid = ephid_from_seed(seed)
 
         print(" - Seed:", seed.hex())
@@ -55,7 +54,7 @@ def main():
         print()
 
     print("\n## Test vector hashed observed EphIDs ##")
-    ephid = ephid_from_seed(unhexlify(SEED1))
+    ephid = ephid_from_seed(bytes.fromhex(SEED1))
     for time in [TIME0, TIME1, TIME2]:
         epoch = epoch_from_time(time)
         print(" - EphID:", ephid.hex())
