@@ -95,20 +95,33 @@ utils/testvectors_lowcost.py
 utils/testvectors_unlinkable.py
 ```
 
-## Running the tests
-
-To run the tests, install `pytest` (e.g., `pip install pytest`) and then run
-`pytest`. You may need to reload the `venv` (`deactivate` followed by `source
-venv/bin/ativate`) to ensure that the paths are picked up correctly.
-
 ## Development
 
-Please install the proper pre-commit-hooks so that the files stay formatted:
+For development, you should install the development and test dependencies:
+
+```bash
+pip install -e ".[dev,test]"
+```
+
+You should also install the proper pre-commit-hooks so that the files stay
+formatted:
 
 ```bash
 pip install pre-commit
 pre-commit install
 ```
+
+### Running the tests
+
+To run the tests, simply call
+
+```bash
+pytest
+```
+
+If you just installed the test dependencies, you may need to reload the `venv`
+(`deactivate` followed by `source venv/bin/ativate`) to ensure that the paths
+are picked up correctly.
 
 ## License
 
