@@ -21,7 +21,7 @@ tracing:
    representation. Other apps use this compact representation to check if they
    have seen an identifier corresponding to an infected person.
  
-*Difference with respect to the Andoid/iOS SDKs and backend implementations.*
+*Difference with respect to the Android/iOS SDKs and backend implementations.*
 The DP-3T project has also published
 [Android](https://github.com/DP-3T/dp3t-sdk-android) and
 [iOS](https://github.com/DP-3T/dp3t-sdk-ios) implementations and a [backend
